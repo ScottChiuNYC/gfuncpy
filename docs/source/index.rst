@@ -21,9 +21,9 @@ Welcome to GFuncPy's documentation!
        <a href="https://pepy.tech/project/gfuncpy">
           <img src="https://static.pepy.tech/badge/gfuncpy" alt="downloads"/>
        </a>
-       <a href="https://pepy.tech/project/gfuncpy">
-          <img src="https://static.pepy.tech/p/d/gfuncpy" alt="downloads/month"/>
-       </a>
+      ..  <a href="https://pepy.tech/project/gfuncpy">
+      ..     <img src="https://static.pepy.tech/p/d/gfuncpy" alt="downloads/month"/>
+      ..  </a>
        <a href="https://github.com/ScottChiuNYC/gfuncpy/blob/main/LICENSE">
           <img src="https://img.shields.io/github/license/ScottChiuNYC/gfuncpy.svg" alt="license"/>
        </a>
