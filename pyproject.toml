@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gfuncpy"
-version = "0.1.5"
+version = "0.1.8"
 description = ""
 authors = ["ScottChiuNYC <scott.chiu@rutgers.edu>"]
 readme = "README.md"
