@@ -4,8 +4,33 @@
    contain the root `toctree` directive.
 
 
-GFuncPy Documentation
-=====================
+Welcome to GFuncPy's documentation!
+===================================
+
+**Package Status**
+
+.. raw:: html
+
+    <p>
+       <a href="https://gfuncpy.readthedocs.io/en/latest/">
+          <img src="https://img.shields.io/readthedocs/gfuncpy.svg" alt="docs"/>
+       </a>
+       <a href="https://pypi.org/project/gfuncpy/">
+          <img src="https://img.shields.io/pypi/v/gfuncpy.svg" alt="pypi"/>
+       </a>
+       <a href="https://pepy.tech/project/gfuncpy">
+          <img src="https://static.pepy.tech/badge/gfuncpy" alt="downloads"/>
+       </a>
+       <a href="https://pepy.tech/project/gfuncpy">
+          <img src="https://static.pepy.tech/p/d/gfuncpy" alt="downloads/month"/>
+       </a>
+       <a href="https://github.com/ScottChiuNYC/gfuncpy/blob/main/LICENSE">
+          <img src="https://img.shields.io/github/license/ScottChiuNYC/gfuncpy.svg" alt="license"/>
+       </a>
+    </p>
+
+
+----
 
 GFuncPy is a flexible and intuitive library for numerical analysis and plotting — perfect for research, teaching, or just exploring math in a hands-on way. It represents functions in discrete form using :math:`x` and :math:`y` values, enabling direct computation and analysis without fuss.
 

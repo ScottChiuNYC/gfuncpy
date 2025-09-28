@@ -1,8 +1,5 @@
-import sys, os, unittest
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from gfuncpy import GridFunction, Identity, sin, cos, gfunc
+from gfuncpy.finite_difference import FiniteDifference
 import gfuncpy
 import unittest
 import numpy as np
@@ -119,6 +116,43 @@ class GridFunctionTestCase(unittest.TestCase):
 
         self.assertRaises(ArithmeticError, lambda: (3*x + 29).root())
         self.assertAlmostEqual((3*x - 5).root(), 5/3)
+
+    def test_derivative_uniform_behavior(self):
+        # derivative should use weighted central for interior and forward/backward at endpoints
+        x = np.linspace(0.0, 2.0, 9)
+        y = x ** 3
+        gf = GridFunction(x, y)
+
+        d = gf.derivative()
+        # interior: centered difference
+        h = x[1] - x[0]
+        expected_center = np.empty_like(y)
+        expected_center[1:-1] = (y[2:] - y[:-2]) / (2 * h)
+
+        np.testing.assert_allclose(d.y[1:-1], expected_center[1:-1], rtol=1e-12, atol=0)
+
+        # endpoints: forward/backward differences
+        expected_first = (y[1] - y[0]) / (x[1] - x[0])
+        expected_last = (y[-1] - y[-2]) / (x[-1] - x[-2])
+        self.assertAlmostEqual(d.y[0], expected_first)
+        self.assertAlmostEqual(d.y[-1], expected_last)
+
+    def test_derivative_nonuniform_matches_fd(self):
+        x = np.array([0.0, 0.1, 0.4, 1.0, 1.5])
+        y = np.sin(x)
+        gf = GridFunction(x, y)
+
+        d = gf.derivative()
+        fd = FiniteDifference.central(gf.grid, gf.y)
+
+        # interior should match FiniteDifference.central
+        np.testing.assert_allclose(d.y[1:-1], fd[1:-1])
+
+        # endpoints should equal forward/backward finite differences
+        expected_first = (y[1] - y[0]) / (x[1] - x[0])
+        expected_last = (y[-1] - y[-2]) / (x[-1] - x[-2])
+        self.assertAlmostEqual(d.y[0], expected_first)
+        self.assertAlmostEqual(d.y[-1], expected_last)
 
 if __name__ == '__main__':
     unittest.main()

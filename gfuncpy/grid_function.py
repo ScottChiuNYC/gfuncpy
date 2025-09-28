@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate
 import functools
+from .finite_difference import FiniteDifference
 
 # Decorator to allow univariate functions to accept GridFunction input
 
@@ -152,6 +153,21 @@ class GridFunction:
                 raise ValueError("to must be within the range of x grid.")
             return antiderivative(to) - antiderivative(frm)  # float
 
+    def derivative(self):
+        """
+        Return a new GridFunction containing the derivative computed using the
+        weighted central difference operator (handles non-uniform grids).
+
+        Endpoints where a central difference cannot be formed will be NaN.
+        """
+        if self.grid is None or self.y is None:
+            raise ValueError('GridFunction must have a grid and values to differentiate')
+
+        dy = FiniteDifference.central(self.grid, self.y)
+        dy[0] = (self.y[1] - self.y[0]) / (self.x[1] - self.x[0])  # forward difference at start
+        dy[-1] = (self.y[-1] - self.y[-2]) / (self.x[-1] - self.x[-2])  # backward difference at end
+        return GridFunction(self.grid, dy)
+
     def __call__(self, x):
         '''
         x can be a list or a scalar
@@ -233,6 +249,7 @@ class GridFunction:
             return GridFunction(self.x, np.minimum(self.y, other))
         
     int = integrate  # alias for integrate method
+    d = derivative  # alias for derivative method
 
 class Identity(GridFunction):
     @staticmethod

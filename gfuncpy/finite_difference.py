@@ -1,6 +1,9 @@
 import numpy as np
 
-# Have you reviewed. The central difference is not following the math on developer guide. 
+# Will review later: 
+# 1. Is it a good idea to take grid as input? 
+# 2. Is central difference implemented correctly? (see developer guide)
+# 3. There are many repetitions, say dx and dy. Should I refactor to avoid that?
 
 # Finite difference differentiation operators for 1D grids
 class FiniteDifference:
@@ -42,5 +45,29 @@ class FiniteDifference:
         result = np.empty_like(y)
         result[0] = np.nan
         result[-1] = np.nan
-        result[1:-1] = (y[2:] - y[:-2]) / (x[2:] - x[:-2])
+        # Implement the weighted central difference from the developer guide:
+        # delta_x f(x_j) = (Delta_j^- / (Delta_j^+ + Delta_j^-)) * delta^+_x f(x_j)
+        #                 + (Delta_j^+ / (Delta_j^+ + Delta_j^-)) * delta^-_x f(x_j)
+        # where Delta_j^+ = x[j+1] - x[j], Delta_j^- = x[j] - x[j-1].
+        # Vectorize for interior points j = 1..n-2
+        dx = np.diff(x)               # length n-1, dx[k] = x[k+1] - x[k]
+        if dx.size >= 2:
+            dx_plus = dx[1:]         # Delta_j^+ for j=1..n-2
+            dx_minus = dx[:-1]       # Delta_j^- for j=1..n-2
+
+            # Forward/backward differences for interior points
+            delta_plus = (y[2:] - y[1:-1]) / dx_plus
+            delta_minus = (y[1:-1] - y[:-2]) / dx_minus
+
+            denom = dx_plus + dx_minus
+            # Avoid division by zero: where denom == 0 set to nan
+            with np.errstate(invalid='ignore', divide='ignore'):
+                weights_plus = np.where(denom != 0, dx_minus / denom, np.nan)
+                weights_minus = np.where(denom != 0, dx_plus / denom, np.nan)
+
+            result[1:-1] = weights_plus * delta_plus + weights_minus * delta_minus
+        else:
+            # Not enough points to form interior; leave interior as nan
+            result[1:-1] = np.nan
+
         return result

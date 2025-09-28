@@ -66,3 +66,14 @@ html_static_path = ['_static']
 master_doc = 'index'
 nbsphinx_allow_errors = True
 nbsphinx_execute = 'never'
+
+# Show "View on GitHub" / "Edit on GitHub" links (sphinx_rtd_theme)
+html_show_sourcelink = True
+html_context = {
+   'display_github': True,
+   'github_user': 'ScottChiuNYC',
+   'github_repo': 'gfuncpy',
+   'github_version': 'main',
+   # path to the docs root in the repo, with leading & trailing slashes
+   'conf_py_path': '/docs/source/',
+}
